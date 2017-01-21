@@ -51,7 +51,6 @@
       {
         case "plus":
           echo $value1 + $value2;
-          array_push($calculations, $value1 . getOperator($operator) . $value2);
           break;
         case "minus":
           echo $value1 - $value2;
@@ -64,6 +63,7 @@
           break;
       }
 
+      array_push($calculations, $value1 . getOperator($operator) . $value2);
       $_SESSION['calculations']=$calculations;
    }
 
