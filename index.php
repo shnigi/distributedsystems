@@ -29,25 +29,42 @@
     </form>
     <h2>
     <?php
+    session_start();
+    $calculations = array();
+
    if( isset($_GET["val1"]) && isset($_GET["operator"]) && isset($_GET["val2"]) ) {
      $value1 = $_GET["val1"];
      $value2 = $_GET["val2"];
      $operator = $_GET["operator"];
 
-     echo "Result:". $value1 . getOperator($operator) . $value2 . " = ";
+     if(isset($_SESSION['calculations'])) {
+       foreach($_SESSION['calculations'] as $value)
+       {
+       array_push($calculations, $value);
+       }
+     }
 
+     $resultText = "Result: ". $value1 . getOperator($operator) . $value2 . " = ";
+     echo $resultText;
 
-      if($operator == 'plus'){
-        echo $value1 + $value2;
-      } else if ($operator == 'minus') {
-        echo $value1 - $value2;
-      } else if ($operator == 'multiplication') {
-        echo $value1 * $value2;
-      } else if ($operator == 'divide') {
-        echo $value1 / $value2;
-      } else {
-        echo "Input values incorrect. Sorry.";
+     switch($operator)
+      {
+        case "plus":
+          echo $value1 + $value2;
+          array_push($calculations, $value1 . getOperator($operator) . $value2);
+          break;
+        case "minus":
+          echo $value1 - $value2;
+          break;
+        case "multiplication":
+          echo $value1 * $value2;
+          break;
+        case "divide":
+          echo $value1 / $value2;
+          break;
       }
+
+      $_SESSION['calculations']=$calculations;
    }
 
    function getOperator($operator) {
@@ -59,6 +76,16 @@
   }
    ?>
     </h2>
+  <?php
+  if(isset($_SESSION['calculations'])) {
+      echo "<p>Previous calculations:</p>";
+      foreach($_SESSION['calculations'] as $key=>$value)
+      {
+      echo $value;
+      echo "<br>";
+      }
+    }
+?>
   </div>
 </div>
 
