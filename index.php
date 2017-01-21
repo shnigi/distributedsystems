@@ -64,7 +64,7 @@
       }
 
       array_push($calculations, $value1 . getOperator($operator) . $value2);
-      $_SESSION['calculations']=$calculations;
+      $_SESSION['calculations'] = $calculations;
    }
 
    function getOperator($operator) {
@@ -78,12 +78,38 @@
     </h2>
   <?php
   if(isset($_SESSION['calculations'])) {
+
+      function getResult ($value){
+        if (strpos($value, '+')) {
+            $values = (explode("+",$value));
+            return $values[0] + $values[1];
+        }
+        else if (strpos($value, '-')) {
+            $values = (explode("-",$value));
+            return $values[0] - $values[1];
+        }
+        else if (strpos($value, '*')) {
+            $values = (explode("*",$value));
+            return $values[0] * $values[1];
+        }
+        else if (strpos($value, '/')) {
+            $values = (explode("/",$value));
+            return $values[0] / $values[1];
+        }
+        else {
+          return "calculation error";
+        }
+      }
+
       echo "<p>Previous calculations:</p>";
-      foreach($_SESSION['calculations'] as $key=>$value)
+      foreach($_SESSION['calculations'] as $value)
       {
       echo $value;
+      echo " = ";
+      echo getResult($value);
       echo "<br>";
       }
+
     }
 ?>
   </div>
