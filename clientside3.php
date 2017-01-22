@@ -27,12 +27,12 @@
 </div>
 
 <script>
-// const operations = {
-//   '+': (a, b) => a + b,
-//   '-': (a, b) => a - b,
-//   '/': (a, b) => a / b,
-//   '*': (a, b) => a * b
-// };
+const operations = {
+  '+': (a, b) => a + b,
+  '-': (a, b) => a - b,
+  '/': (a, b) => a / b,
+  '*': (a, b) => a * b
+};
 
 const getOperator = (operator) => {
   switch(operator) {
@@ -56,14 +56,17 @@ const getOperator = (operator) => {
 let nextOperationIndex = 1;
 let nextNumberIndex = 2;
 
-const doStuff = (operator, numbers) => {
-    const realOperator = getOperator(operator[0]);
+const doStuff = (operation, operator, numbers) => {
+  const realOperator = getOperator(operator[0]);
+  console.log("operation", operation);
   $.post({url: 'calc1.php',
           data: `&value1=${numbers[0]}&operator=${realOperator}&value2=${numbers[1]}`})
     .then(result => {
       console.log("test",numbers[nextNumberIndex]);
       if (typeof numbers[nextNumberIndex] !== 'undefined') {
-        // console.log(numbers);
+        console.log("numbers", numbers);
+        console.log("operators", operators);
+        console.log("nextOperation", nextOperation);
         const nextOperation = operations[nextOperationIndex](result, numbers[nextNumberIndex]);
         // Nextoperation = operations[operators[nextOperation]]
         nextOperationIndex++;
@@ -80,11 +83,10 @@ const doStuff = (operator, numbers) => {
 $('#calculator').submit(event => {
   event.preventDefault();
   const value = $('input[name="operation"]').val();
-  const operator = value.split(/[0-9]/).filter(val => val);
+  const operators = value.split(/[0-9]/).filter(val => val);
   const numbers = value.split(/[-+\*\/]/).map(val => parseInt(val));
-  // const firstOperation = operations[operators[0]](numbers[0], numbers[1]);
-  // console.log("firstOperation", firstOperation);
-  doStuff(operator, numbers)
+  const firstOperation = operations[operators[0]](numbers[0], numbers[1]);
+  doStuff(firstOperation, operators, numbers)
     .finally(result => console.log('result', result));
 });
 </script>
