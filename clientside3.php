@@ -27,12 +27,12 @@
 </div>
 
 <script>
-const operations = {
-  '+': (a, b) => a + b,
-  '-': (a, b) => a - b,
-  '/': (a, b) => a / b,
-  '*': (a, b) => a * b
-};
+// const operations = {
+//   '+': (a, b) => a + b,
+//   '-': (a, b) => a - b,
+//   '/': (a, b) => a / b,
+//   '*': (a, b) => a * b
+// };
 
 const getOperator = (operator) => {
   switch(operator) {
@@ -56,25 +56,25 @@ const getOperator = (operator) => {
 let nextOperationIndex = 1;
 let nextNumberIndex = 2;
 
-const doStuff = (operation, operator, numbers) => {
-  const realOperator = getOperator(operator[0]);
-  console.log("operation", operation);
+const doStuff = (operators, numbers) => {
+  const realOperator = getOperator(operators[0]);
+  console.log("numbers", numbers);
+  console.log("operators", operators);
   $.post({url: 'calc1.php',
           data: `&value1=${numbers[0]}&operator=${realOperator}&value2=${numbers[1]}`})
     .then(result => {
-      console.log("test",numbers[nextNumberIndex]);
+      // console.log("result", result);
+      $("#results").append(`${numbers[0]}${operators[0]}${numbers[1]}=${result}<br>`);
+      // console.log("test",numbers[nextNumberIndex]);
       if (typeof numbers[nextNumberIndex] !== 'undefined') {
-        console.log("numbers", numbers);
-        console.log("operators", operators);
-        console.log("nextOperation", nextOperation);
-        const nextOperation = operations[nextOperationIndex](result, numbers[nextNumberIndex]);
-        // Nextoperation = operations[operators[nextOperation]]
+
+        let nextOperationNumbers = [result, numbers[nextNumberIndex]];
+        const nextOperator = operators[nextOperationIndex];
         nextOperationIndex++;
         nextNumberIndex++;
-        return doStuff(nextOperation, operators, numbers);
+        return doStuff(nextOperator, nextOperationNumbers);
       }
 
-      console.log('result tässä', result);
       return result;
     });
   };
@@ -85,8 +85,7 @@ $('#calculator').submit(event => {
   const value = $('input[name="operation"]').val();
   const operators = value.split(/[0-9]/).filter(val => val);
   const numbers = value.split(/[-+\*\/]/).map(val => parseInt(val));
-  const firstOperation = operations[operators[0]](numbers[0], numbers[1]);
-  doStuff(firstOperation, operators, numbers)
+  doStuff(operators, numbers)
     .finally(result => console.log('result', result));
 });
 </script>
