@@ -61,7 +61,6 @@ const doStuff = (operation, operators, numbers) => {
         nextNumberIndex++;
         return doStuff(nextOperation, operators, numbers);
       }
-
       return result;
     });
   };
@@ -73,8 +72,7 @@ $('#calculator').submit(event => {
   const operators = value.split(/[0-9]/).filter(val => val);
   const numbers = value.split(/[-+\*\/]/).map(val => parseInt(val));
   const firstOperation = [numbers[0], numbers[1], operators[0]];
-  doStuff(firstOperation, operators, numbers)
-    .finally(result => console.log('result', result));
+  doStuff(firstOperation, operators, numbers);
 });
 </script>
 
