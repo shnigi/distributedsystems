@@ -27,13 +27,6 @@
 </div>
 
 <script>
-// const operations = {
-//   '+': (a, b) => a + b,
-//   '-': (a, b) => a - b,
-//   '/': (a, b) => a / b,
-//   '*': (a, b) => a * b
-// };
-
 const getOperator = (operator) => {
   switch(operator) {
     case '+':
@@ -56,23 +49,17 @@ const getOperator = (operator) => {
 let nextOperationIndex = 1;
 let nextNumberIndex = 2;
 
-const doStuff = (operators, numbers) => {
-  const realOperator = getOperator(operators[0]);
-  console.log("numbers", numbers);
-  console.log("operators", operators);
+const doStuff = (operation, operators, numbers) => {
+  const realOperator = getOperator(operation[2]);
   $.post({url: 'calc1.php',
-          data: `&value1=${numbers[0]}&operator=${realOperator}&value2=${numbers[1]}`})
+          data: `&value1=${operation[0]}&operator=${realOperator}&value2=${operation[1]}`})
     .then(result => {
-      // console.log("result", result);
-      $("#results").append(`${numbers[0]}${operators[0]}${numbers[1]}=${result}<br>`);
-      // console.log("test",numbers[nextNumberIndex]);
+      $("#results").append(`${operation[0]}${operation[2]}${operation[1]}=${result}<br>`);
       if (typeof numbers[nextNumberIndex] !== 'undefined') {
-
-        let nextOperationNumbers = [result, numbers[nextNumberIndex]];
-        const nextOperator = operators[nextOperationIndex];
+        let nextOperation = [result, numbers[nextNumberIndex], operators[nextOperationIndex]];
         nextOperationIndex++;
         nextNumberIndex++;
-        return doStuff(nextOperator, nextOperationNumbers);
+        return doStuff(nextOperation, operators, numbers);
       }
 
       return result;
@@ -85,7 +72,8 @@ $('#calculator').submit(event => {
   const value = $('input[name="operation"]').val();
   const operators = value.split(/[0-9]/).filter(val => val);
   const numbers = value.split(/[-+\*\/]/).map(val => parseInt(val));
-  doStuff(operators, numbers)
+  const firstOperation = [numbers[0], numbers[1], operators[0]];
+  doStuff(firstOperation, operators, numbers)
     .finally(result => console.log('result', result));
 });
 </script>
