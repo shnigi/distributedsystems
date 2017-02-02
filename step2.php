@@ -22,30 +22,22 @@
     </form>
 
 <?php
- if( isset($_GET["val1"])) {
-   $value1 = $_GET["val1"];
+  if( isset($_GET["val1"])) {
+    	$value1 = $_GET["val1"];
+    	$multiplier = substr($value1, 0, 1);
+    	$sine = substr($value1, 6, 1);
 
-   $multiplier = substr($value1, 0, 1);
-   $sine = substr($value1, 6, 1);
+    	$content = "set terminal png\n
+    				      set output 'test.png'\n
+    				      plot sin(x)*".$multiplier;
 
-   $test = exec('gnuplot');
-   $test2 = exec('set terminal png');
-   $test3 = exec('set output "test.png"');
-   $test4 = exec('plot sin(x)*'+$multiplier);
+    	file_put_contents("test.plot", $content);
+    	exec("gnuplot < test.plot");
 
-   echo $multiplier;
-   echo $sine;
+     }
 
-   echo $test;
-   echo $test2;
-   echo $test3;
-   echo $test4;
-
-  // plot sin(x)*2
-
-
- }
-?>
+    ?>
+    <img src="<?php echo "test.png"; ?>">
   </div>
 </div>
 
