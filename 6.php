@@ -50,6 +50,7 @@ const getOperator = (operator) => {
 let fn = "";
 let nextOperationIndex = 1;
 let nextNumberIndex = 2;
+let calculations = [];
 
 const newCanvas = () => {
   const canvas = '<canvas width="200" height="200"></canvas>';
@@ -72,9 +73,10 @@ const doStuff = (operation, operators, numbers) => {
   $.post({url: '2server.php',
           data: `&value1=${operation[0]}&operator=${realOperator}&value2=${operation[1]}`})
     .then(result => {
-      // $("#results").append(`${operation[0]}${operation[2]}${operation[1]}=${result}<br>`);
+      $("#results").append(`${operation[0]}${operation[2]}${operation[1]}=${result}<br>`);
       if (typeof numbers[nextNumberIndex] !== 'undefined') {
         let nextOperation = [result, numbers[nextNumberIndex], operators[nextOperationIndex]];
+        calculations.push(nextOperation);
         nextOperationIndex++;
         nextNumberIndex++;
         return doStuff(nextOperation, operators, numbers);
@@ -93,7 +95,11 @@ $('#calculator').submit(event => {
   const operators = value.split(/[0-9]/).filter(val => val);
   const numbers = value.split(/[-+\*\/]/).map(val => parseInt(val));
   const firstOperation = [numbers[0], numbers[1], operators[0]];
+  calculations.push(firstOperation);
   doStuff(firstOperation, operators, numbers);
+  console.log("calculations", calculations);
+  localStorage.setItem("calculations", JSON.stringify(calculations));
+  console.log("haetaan kamat", JSON.parse(localStorage.getItem("calculations")));
 });
 </script>
 
