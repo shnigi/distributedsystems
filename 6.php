@@ -51,6 +51,7 @@ let fn = "";
 let nextOperationIndex = 1;
 let nextNumberIndex = 2;
 let calculations = [];
+let results = [];
 
 const newCanvas = () => {
   const canvas = '<canvas width="200" height="200"></canvas>';
@@ -77,6 +78,7 @@ const doStuff = (operation, operators, numbers) => {
       if (typeof numbers[nextNumberIndex] !== 'undefined') {
         let nextOperation = [result, numbers[nextNumberIndex], operators[nextOperationIndex]];
         calculations.push(nextOperation);
+        results.push(result);
         nextOperationIndex++;
         nextNumberIndex++;
         return doStuff(nextOperation, operators, numbers);
@@ -84,6 +86,11 @@ const doStuff = (operation, operators, numbers) => {
       fn = `Math.sin(x)*${result}`;
       newCanvas();
       update();
+      results.push(result);
+      console.log("results", JSON.stringify(results));
+      console.log("operations", JSON.stringify(calculations));
+      window.localStorage.setItem("calculations", JSON.stringify(calculations));
+      window.localStorage.setItem("results", JSON.stringify(results));
       return result;
     });
   };
@@ -97,9 +104,8 @@ $('#calculator').submit(event => {
   const firstOperation = [numbers[0], numbers[1], operators[0]];
   calculations.push(firstOperation);
   doStuff(firstOperation, operators, numbers);
-  console.log("calculations", calculations);
-  localStorage.setItem("calculations", JSON.stringify(calculations));
-  console.log("haetaan kamat", JSON.parse(localStorage.getItem("calculations")));
+  // const previous = window.localStorage.getItem("calculations");
+  // console.log("asd", JSON.parse("previous"));
 });
 </script>
 
