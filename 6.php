@@ -69,6 +69,18 @@ const update = () => {
 };
 
 const doStuff = (operation, operators, numbers) => {
+
+  const cachedValues = JSON.parse(window.localStorage.getItem("calculations"));
+  console.log('cache', cachedValues);
+  if (cachedValues) {
+    for (calculation of cachedValues) {
+      if (calculation.toString() === operation.toString()) {
+        $("#results").append(`${numbers[0]}${operators[0]}${numbers[1]}=jee<br>`);
+      }
+    }
+  }
+
+  calculations.push(operation);
   const realOperator = getOperator(operation[2]);
   $.post({url: '2server.php',
           data: `&value1=${operation[0]}&operator=${realOperator}&value2=${operation[1]}`})
@@ -76,23 +88,9 @@ const doStuff = (operation, operators, numbers) => {
       $("#results").append(`${operation[0]}${operation[2]}${operation[1]}=${result}<br>`);
       if (typeof numbers[nextNumberIndex] !== 'undefined') {
         let nextOperation = [result, numbers[nextNumberIndex], operators[nextOperationIndex]];
-
-        const cachedValues = JSON.parse(window.localStorage.getItem("calculations"));
-        if (cachedValues) {
-          for (calculation of cachedValues) {
-            console.log('next', nextOperation);
-            console.log('calc', calculation);
-            if (calculation.toString() === nextOperation.toString()) {
-              $("#results").append(`${numbers[0]}${operators[0]}${numbers[1]}=jee`);
-            } else {
-              console.log('meniko tanne');
-              calculations.push(nextOperation);
-              nextOperationIndex++;
-              nextNumberIndex++;
-              return doStuff(nextOperation, operators, numbers);
-            }
-          }
-        }
+        nextOperationIndex++;
+        nextNumberIndex++;
+        return doStuff(nextOperation, operators, numbers);
       }
       fn = `Math.sin(x)*${result}`;
       newCanvas();
@@ -109,21 +107,7 @@ $('#calculator').submit(event => {
   const operators = value.split(/[0-9]/).filter(val => val);
   const numbers = value.split(/[-+\*\/]/).map(val => parseInt(val));
   const firstOperation = [numbers[0], numbers[1], operators[0]];
-  const cached = JSON.parse(window.localStorage.getItem("calculations"));
-  if (cached) {
-    for (calculation of cached) {
-      if (calculation.toString() === firstOperation.toString()) {
-        $("#results").append(`${numbers[0]}${operators[0]}${numbers[1]}=tulos<br>`);
-      } else {
-        calculations.push(firstOperation);
-        doStuff(firstOperation, operators, numbers);
-      }
-    }
-  } else {
-    calculations.push(firstOperation);
-    doStuff(firstOperation, operators, numbers);
-  }
-
+  doStuff(firstOperation, operators, numbers);
 });
 </script>
 
