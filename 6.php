@@ -78,14 +78,19 @@ const doStuff = (operation, operators, numbers) => {
         let nextOperation = [result, numbers[nextNumberIndex], operators[nextOperationIndex]];
 
         const cachedValues = JSON.parse(window.localStorage.getItem("calculations"));
-        for (calculation of cachedValues) {
-          if (calculation.toString() === nextOperation.toString()) {
-            $("#results").append(`${numbers[0]}${operators[0]}${numbers[1]}=jee`);
-          } else {
-            calculations.push(nextOperation);
-            nextOperationIndex++;
-            nextNumberIndex++;
-            return doStuff(nextOperation, operators, numbers);
+        if (cachedValues) {
+          for (calculation of cachedValues) {
+            console.log('next', nextOperation);
+            console.log('calc', calculation);
+            if (calculation.toString() === nextOperation.toString()) {
+              $("#results").append(`${numbers[0]}${operators[0]}${numbers[1]}=jee`);
+            } else {
+              console.log('meniko tanne');
+              calculations.push(nextOperation);
+              nextOperationIndex++;
+              nextNumberIndex++;
+              return doStuff(nextOperation, operators, numbers);
+            }
           }
         }
       }
