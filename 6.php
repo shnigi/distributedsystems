@@ -51,7 +51,6 @@ let fn = "";
 let nextOperationIndex = 1;
 let nextNumberIndex = 2;
 let calculations = [];
-let results = [];
 
 const newCanvas = () => {
   const canvas = '<canvas width="200" height="200"></canvas>';
@@ -77,20 +76,23 @@ const doStuff = (operation, operators, numbers) => {
       $("#results").append(`${operation[0]}${operation[2]}${operation[1]}=${result}<br>`);
       if (typeof numbers[nextNumberIndex] !== 'undefined') {
         let nextOperation = [result, numbers[nextNumberIndex], operators[nextOperationIndex]];
-        calculations.push(nextOperation);
-        results.push(result);
-        nextOperationIndex++;
-        nextNumberIndex++;
-        return doStuff(nextOperation, operators, numbers);
+
+        const cachedValues = JSON.parse(window.localStorage.getItem("calculations"));
+        for (calculation of cachedValues) {
+          if (calculation.toString() === nextOperation.toString()) {
+            $("#results").append(`${numbers[0]}${operators[0]}${numbers[1]}=jee`);
+          } else {
+            calculations.push(nextOperation);
+            nextOperationIndex++;
+            nextNumberIndex++;
+            return doStuff(nextOperation, operators, numbers);
+          }
+        }
       }
       fn = `Math.sin(x)*${result}`;
       newCanvas();
       update();
-      results.push(result);
-      console.log("results", JSON.stringify(results));
-      console.log("operations", JSON.stringify(calculations));
       window.localStorage.setItem("calculations", JSON.stringify(calculations));
-      window.localStorage.setItem("results", JSON.stringify(results));
       return result;
     });
   };
@@ -102,10 +104,21 @@ $('#calculator').submit(event => {
   const operators = value.split(/[0-9]/).filter(val => val);
   const numbers = value.split(/[-+\*\/]/).map(val => parseInt(val));
   const firstOperation = [numbers[0], numbers[1], operators[0]];
-  calculations.push(firstOperation);
-  doStuff(firstOperation, operators, numbers);
-  // const previous = window.localStorage.getItem("calculations");
-  // console.log("asd", JSON.parse("previous"));
+  const cached = JSON.parse(window.localStorage.getItem("calculations"));
+  if (cached) {
+    for (calculation of cached) {
+      if (calculation.toString() === firstOperation.toString()) {
+        $("#results").append(`${numbers[0]}${operators[0]}${numbers[1]}=tulos<br>`);
+      } else {
+        calculations.push(firstOperation);
+        doStuff(firstOperation, operators, numbers);
+      }
+    }
+  } else {
+    calculations.push(firstOperation);
+    doStuff(firstOperation, operators, numbers);
+  }
+
 });
 </script>
 
