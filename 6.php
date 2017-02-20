@@ -16,9 +16,9 @@
 
 <div class="wrapper">
   <div class="center-div">
-    <h1>Client draw, server calculate</h1>
+    <h1>Caching. Client draw, server calculate.</h1>
     <p>Type your calculation in the format: value1 operation value2.</p>
-    <form id="calculator" action="">
+    <form id="calculator">
       Operation <input type="text" name="operation">
       <input type="submit">
     </form>
@@ -31,19 +31,15 @@
 const getOperator = (operator) => {
   switch(operator) {
     case '+':
-        return "plus";
-        break;
+        return 'plus';
     case '-':
-        return "minus";
-        break;
+        return 'minus';
     case '*':
-        return "multiplication";
-        break;
+        return 'multiplication';
     case '/':
-        return "divide";
-        break;
+        return 'divide';
     default:
-        console.log("error");
+        console.log('error');
   }
 };
 
@@ -54,15 +50,15 @@ let calculations = [];
 
 const newCanvas = () => {
   const canvas = '<canvas width="200" height="200"></canvas>';
-  $("#canvasArea").html(canvas);
+  $('#canvasArea').html(canvas);
 };
 
 const update = () => {
   const canvas = document.querySelector('canvas');
   const ctx = canvas.getContext('2d');
-  for (var i = 0; i < 400; i++) {
-    var x = i / 20;
-    var y = -eval(fn)  * 5 + 100;
+  for (let i = 0; i < 400; i++) {
+    let x = i / 20;
+    let y = eval(fn) * 5 + 100;
     ctx.lineTo(i/2, y, 1, 1);
   }
   ctx.stroke();
@@ -70,22 +66,22 @@ const update = () => {
 
 const doStuff = (operation, operators, numbers) => {
 
-  const cachedValues = JSON.parse(window.localStorage.getItem("calculations"));
-  console.log('cache', cachedValues);
-  if (cachedValues) {
-    for (calculation of cachedValues) {
-      if (calculation.toString() === operation.toString()) {
-        $("#results").append(`${numbers[0]}${operators[0]}${numbers[1]}=jee<br>`);
-      }
-    }
-  }
+  // const cachedValues = JSON.parse(window.localStorage.getItem('calculations'));
+  // console.log('cache', cachedValues);
+  // if (cachedValues) {
+  //   for (calculation of cachedValues) {
+  //     if (calculation.toString() === operation.toString()) {
+  //       $('#results').append(`${numbers[0]}${operators[0]}${numbers[1]}=jee<br>`);
+  //     }
+  //   }
+  // }
+  // calculations.push(operation);
 
-  calculations.push(operation);
   const realOperator = getOperator(operation[2]);
   $.post({url: '2server.php',
           data: `&value1=${operation[0]}&operator=${realOperator}&value2=${operation[1]}`})
     .then(result => {
-      $("#results").append(`${operation[0]}${operation[2]}${operation[1]}=${result}<br>`);
+      $('#results').append(`${operation[0]}${operation[2]}${operation[1]}=${result}<br>`);
       if (typeof numbers[nextNumberIndex] !== 'undefined') {
         let nextOperation = [result, numbers[nextNumberIndex], operators[nextOperationIndex]];
         nextOperationIndex++;
@@ -95,8 +91,7 @@ const doStuff = (operation, operators, numbers) => {
       fn = `Math.sin(x)*${result}`;
       newCanvas();
       update();
-      window.localStorage.setItem("calculations", JSON.stringify(calculations));
-      return result;
+      // window.localStorage.setItem('calculations', JSON.stringify(calculations));
     });
   };
 

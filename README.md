@@ -34,4 +34,6 @@ Server does the calculations and the client does the plotting.
 I am using the same recursive function from step 1 to send values to server and for final value I draw the line using variant 2 from step 2.
 
 ## 6.php step 3.
-Implement caching of results on the client side. 
+Implement caching of results on the client side.
+
+Last file includes all the previous stuff but instead sending all the operations to server values are checked from cache before sending.
