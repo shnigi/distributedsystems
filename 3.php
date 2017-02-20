@@ -21,6 +21,7 @@
       <input type="submit">
     </form>
 
+
 <?php
   if( isset($_GET["val1"])) {
     	$value1 = $_GET["val1"];
@@ -32,7 +33,10 @@
     				      plot sin(x)*".$multiplier;
 
     	file_put_contents("test.plot", $content);
-    	exec("gnuplot < test.plot");
+      // For Linux host
+    	// exec("gnuplot < test.plot");
+      // For OSX host
+      exec("/usr/local/bin/gnuplot < test.plot");
 
      }
 
