@@ -72,7 +72,7 @@ const doStuff = (operation, operators, numbers) => {
   $.post({url: '2server.php',
           data: `&value1=${operation[0]}&operator=${realOperator}&value2=${operation[1]}`})
     .then(result => {
-      // $("#results").append(`${operation[0]}${operation[2]}${operation[1]}=${result}<br>`);
+      $("#results").append(`${operation[0]}${operation[2]}${operation[1]}=${result}<br>`);
       if (typeof numbers[nextNumberIndex] !== 'undefined') {
         let nextOperation = [result, numbers[nextNumberIndex], operators[nextOperationIndex]];
         nextOperationIndex++;
