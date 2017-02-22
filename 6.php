@@ -22,6 +22,10 @@
       Operation <input type="text" name="operation">
       <input type="submit">
     </form>
+    <form id="cacheSize">
+      Cache Size <input type="number" name="cacheSize">
+      <input type="submit">
+    </form>
     <div id="results"></div>
     <div id="canvasArea"></div>
   </div>
@@ -40,10 +44,10 @@ const getOperator = (operator) => {
         return 'divide';
     default:
         console.log('error');
+        return null;
   }
 };
 
-let fn = "";
 let nextOperationIndex = 1;
 let nextNumberIndex = 2;
 let calculations = [];
@@ -53,48 +57,120 @@ const newCanvas = () => {
   $('#canvasArea').html(canvas);
 };
 
-const update = () => {
+const update = (result) => {
   const canvas = document.querySelector('canvas');
   const ctx = canvas.getContext('2d');
   for (let i = 0; i < 400; i++) {
     let x = i / 20;
-    let y = eval(fn) * 5 + 100;
+    let y = Math.sin(x) * result * 5 + 100;
     ctx.lineTo(i/2, y, 1, 1);
   }
   ctx.stroke();
 };
 
-const doStuff = (operation, operators, numbers) => {
+const getCache = () => {
+  return JSON.parse(window.localStorage.getItem('calculations') || '[]');
+}
 
-  // const cachedValues = JSON.parse(window.localStorage.getItem('calculations'));
-  // console.log('cache', cachedValues);
-  // if (cachedValues) {
-  //   for (calculation of cachedValues) {
-  //     if (calculation.toString() === operation.toString()) {
-  //       $('#results').append(`${numbers[0]}${operators[0]}${numbers[1]}=jee<br>`);
-  //     }
-  //   }
-  // }
-  // calculations.push(operation);
+const getCacheSize = () => {
+  const defaultCacheSize = 5;
+  return parseInt(JSON.parse(window.localStorage.getItem('cacheSize') || defaultCacheSize));
+}
+
+let cacheSize = getCacheSize();
+
+const setCacheSize = (value) => {
+  cacheSize = value;
+  window.localStorage.setItem('cacheSize', JSON.stringify(value));
+}
+
+const setCache = (values) => {
+  let oldValues = getCache();
+
+  if (checkCache(values)) {
+    console.log('Arvo oli cachessa');
+    return;
+  }
+
+  if (oldValues.length >= cacheSize) {
+    oldValues = oldValues.splice(-(cacheSize - 1));
+  }
+
+  oldValues.push(values);
+
+  window.localStorage.setItem('calculations', JSON.stringify(oldValues));
+}
+
+const checkCache = (values) => {
+  const [first, second, operator] = values;
+  let inCache = false;
+
+  getCache().forEach(([oldFirst, oldSecond, oldOperator]) => {
+    if (oldFirst === first && oldSecond === second && oldOperator === operator) {
+      inCache = true;
+    }
+  });
+
+  return inCache;
+}
+
+
+const initial = () => {
+  const cachedValues = getCache();
+
+  console.log('cache', cachedValues.length);
+  if (cachedValues.length) {
+    $('#results').empty()
+
+    for (calculation of cachedValues) {
+      let result;
+      const [first, second, operator] = calculation;
+
+      if (operator === '+') {
+        result = first + second;
+      } else if (operator === '-') {
+        result = first - second;
+      } else if (operator === '*') {
+        result = first * second;
+      } else if (operator === '/') {
+        result = first / second;
+      }
+
+      $('#results').append(`${first}${operator}${second}=${result}<br>`);
+    }
+  }
+}
+
+const doStuff = (operation, operators, numbers) => {
+  if (checkCache(operation)) {
+    console.log('Arvo oli cachessa');
+    return;
+  }
 
   const realOperator = getOperator(operation[2]);
-  $.post({url: '2server.php',
-          data: `&value1=${operation[0]}&operator=${realOperator}&value2=${operation[1]}`})
+  $.post({
+    url: '2server.php',
+    data: `&value1=${operation[0]}&operator=${realOperator}&value2=${operation[1]}`
+  })
     .then(result => {
-      $('#results').append(`${operation[0]}${operation[2]}${operation[1]}=${result}<br>`);
       if (typeof numbers[nextNumberIndex] !== 'undefined') {
         let nextOperation = [result, numbers[nextNumberIndex], operators[nextOperationIndex]];
         nextOperationIndex++;
         nextNumberIndex++;
         return doStuff(nextOperation, operators, numbers);
       }
-      fn = `Math.sin(x)*${result}`;
+
+      setCache(operation);
+
+      initial();
+
       newCanvas();
-      update();
-      // window.localStorage.setItem('calculations', JSON.stringify(calculations));
+      update(result);
     });
   };
 
+
+initial();
 
 $('#calculator').submit(event => {
   event.preventDefault();
@@ -103,6 +179,11 @@ $('#calculator').submit(event => {
   const numbers = value.split(/[-+\*\/]/).map(val => parseInt(val));
   const firstOperation = [numbers[0], numbers[1], operators[0]];
   doStuff(firstOperation, operators, numbers);
+});
+
+$('#cacheSize').submit(event => {
+  event.preventDefault();
+  setCacheSize($('input[name="cacheSize"]').val());
 });
 </script>
 

@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <html>
 <body>
   <style>
@@ -29,7 +32,6 @@
     </form>
     <h2>
     <?php
-    session_start();
     $calculations = array();
 
    if( isset($_GET["val1"]) && isset($_GET["operator"]) && isset($_GET["val2"]) ) {

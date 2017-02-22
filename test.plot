@@ -2,4 +2,4 @@ set terminal png
 
     				      set output 'test.png'
 
-    				      plot sin(x)*1
+    				      plot sin(x)*12
