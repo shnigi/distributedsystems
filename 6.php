@@ -20,11 +20,11 @@
     <p>Type your calculation in the format: value1 operation value2.</p>
     <form id="calculator">
       Operation <input type="text" name="operation">
-      <input type="submit">
+      <button type="submit">Submit</button>
     </form>
     <form id="cacheSize">
       Cache Size <input type="number" name="cacheSize">
-      <input type="submit">
+      <button type="submit">Set</button>
     </form>
     <div id="results"></div>
     <div id="canvasArea"></div>
@@ -115,6 +115,13 @@ const checkCache = (values) => {
 }
 
 
+const hashMap = {
+  '+': (a, b) => a + b,
+  '-': (a, b) => a - b,
+  '*': (a, b) => a * b,
+  '/': (a, b) => a / b
+};
+
 const initial = () => {
   const cachedValues = getCache();
 
@@ -123,18 +130,8 @@ const initial = () => {
     $('#results').empty()
 
     for (calculation of cachedValues) {
-      let result;
       const [first, second, operator] = calculation;
-
-      if (operator === '+') {
-        result = first + second;
-      } else if (operator === '-') {
-        result = first - second;
-      } else if (operator === '*') {
-        result = first * second;
-      } else if (operator === '/') {
-        result = first / second;
-      }
+      const result = hashMap[operator](first, second);
 
       $('#results').append(`${first}${operator}${second}=${result}<br>`);
     }
@@ -180,6 +177,8 @@ $('#calculator').submit(event => {
   const firstOperation = [numbers[0], numbers[1], operators[0]];
   doStuff(firstOperation, operators, numbers);
 });
+
+$('#cacheSize input').val(cacheSize);
 
 $('#cacheSize').submit(event => {
   event.preventDefault();
