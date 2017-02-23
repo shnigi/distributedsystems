@@ -1,7 +1,6 @@
 # Distributedsystems course
 Helsinki University course Distributed Systems 2017 Spring
 Niki Ahlskog
-014732076
 https://github.com/shnigi/distributedsystems
 
 # Requirements
