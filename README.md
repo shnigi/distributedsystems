@@ -1,10 +1,13 @@
 # Distributedsystems course
 Helsinki University course Distributed Systems 2017 Spring
+Niki Ahlskog
+014732076
+https://github.com/shnigi/distributedsystems
 
 # Requirements
-Internet connection for jQuery library
-Web server with PHP support and exec allowed
-Proper user rights for writing plot and png files
+- Internet connection for jQuery library.
+- Web server with PHP support and exec allowed.
+- Apache rights for writing plot and png files.
 
 # Documentation
 
@@ -26,7 +29,7 @@ I made PHP script that sends the multiplier to GNUPLOT which then sends the png 
 ## 4.php step 2 variant 2.
 In the second variant, plot the figure locally on the client.
 
-The input form again takes only the multiplier for plotting graph. Then I draw the sine wave using this multiplier with canvas
+The input form again takes calculations as in step 1. Then I draw the sine wave using result as multiplier with canvas
 
 ## 5.php step 2 variant 3.
 Server does the calculations and the client does the plotting.
@@ -36,4 +39,4 @@ I am using the same recursive function from step 1 to send values to server and 
 ## 6.php step 3.
 Implement caching of results on the client side.
 
-Last file includes all the previous stuff but instead sending all the operations to server values are checked from cache before sending.
+Last file includes all the previous stuff but instead sending all the operations to server values are checked from cache before sending. LocalStorage is used as cache.
