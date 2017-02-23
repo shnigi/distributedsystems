@@ -21,13 +21,17 @@
       a*sin(x) <input type="text" name="val1">
       <input type="submit">
     </form>
+    <div id="results"></div>
+    <br>
     <div id="canvasArea"></div>
   </div>
 </div>
 
 
 <script>
-let fn = "Math.sin(x)*x";
+
+let nextOperationIndex = 1;
+let nextNumberIndex = 2;
 
 const newCanvas = () => {
   const canvas = '<canvas width="200" height="200"></canvas>';
@@ -60,11 +64,35 @@ const update = (result) => {
   ctx.stroke();
 };
 
+const hashMap = {
+  '+': (a, b) => a + b,
+  '-': (a, b) => a - b,
+  '*': (a, b) => a * b,
+  '/': (a, b) => a / b
+};
+
+const doStuff = (operation, operators, numbers) => {
+  const [first, second, operator] = operation;
+  const result = hashMap[operator](first, second);
+  $("#results").append(`${operation[0]}${operation[2]}${operation[1]}=${result}<br>`);
+  if (typeof numbers[nextNumberIndex] !== 'undefined') {
+    let nextOperation = [result, numbers[nextNumberIndex], operators[nextOperationIndex]];
+    nextOperationIndex++;
+    nextNumberIndex++;
+    return doStuff(nextOperation, operators, numbers);
+  }
+  newCanvas();
+  update(result);
+  return result;
+};
+
 $('#calculator').submit(event => {
   event.preventDefault();
   const value = $('input[name="val1"]').val();
-  newCanvas();
-  update(value);
+  const operators = value.split(/[0-9]/).filter(val => val);
+  const numbers = value.split(/[-+\*\/]/).map(val => parseInt(val));
+  const firstOperation = [numbers[0], numbers[1], operators[0]];
+  doStuff(firstOperation, operators, numbers);
 });
 </script>
 
