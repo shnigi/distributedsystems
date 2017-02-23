@@ -104,7 +104,6 @@ const setCache = (values) => {
 const checkCache = (values) => {
   const [first, second, operator] = values;
   let inCache = false;
-  console.log('kekki', values);
 
   getCache().forEach(([oldFirst, oldSecond, oldOperator]) => {
     if (oldFirst === first && oldSecond === second && oldOperator === operator) {
@@ -135,6 +134,8 @@ const initial = () => {
       const result = hashMap[operator](first, second);
 
       $('#results').append(`${first}${operator}${second}=${result}<br>`);
+      newCanvas();
+      update(result);
     }
   }
 }
