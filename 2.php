@@ -51,7 +51,7 @@ let nextNumberIndex = 2;
 
 const doStuff = (operation, operators, numbers) => {
   const realOperator = getOperator(operation[2]);
-  $.post({url: '2server.php',
+  $.post({url: 'server.php',
           data: `&value1=${operation[0]}&operator=${realOperator}&value2=${operation[1]}`})
     .then(result => {
       $("#results").append(`${operation[0]}${operation[2]}${operation[1]}=${result}<br>`);

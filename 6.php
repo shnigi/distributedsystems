@@ -104,6 +104,7 @@ const setCache = (values) => {
 const checkCache = (values) => {
   const [first, second, operator] = values;
   let inCache = false;
+  console.log('kekki', values);
 
   getCache().forEach(([oldFirst, oldSecond, oldOperator]) => {
     if (oldFirst === first && oldSecond === second && oldOperator === operator) {
@@ -146,7 +147,7 @@ const doStuff = (operation, operators, numbers) => {
 
   const realOperator = getOperator(operation[2]);
   $.post({
-    url: '2server.php',
+    url: 'server.php',
     data: `&value1=${operation[0]}&operator=${realOperator}&value2=${operation[1]}`
   })
     .then(result => {
