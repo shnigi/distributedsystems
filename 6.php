@@ -27,6 +27,7 @@
       <button type="submit">Set</button>
     </form>
     <div id="results"></div>
+    <br>
     <div id="canvasArea"></div>
   </div>
 </div>
@@ -65,6 +66,21 @@ const update = (result) => {
     let y = Math.sin(x) * result * 5 + 100;
     ctx.lineTo(i/2, y, 1, 1);
   }
+  ctx.strokeStyle = 'rgb(26, 63, 212)';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = 'rgb(0, 0, 0)';
+  ctx.moveTo(100, 0);
+  ctx.lineTo(100,200);
+  ctx.moveTo(0, 100);
+  ctx.lineTo(200,100);
+  ctx.font="30px Arial";
+  ctx.fillStyle = "red";
+  ctx.fillText("X",0, 80);
+  ctx.fillText("Y",120, 200);
   ctx.stroke();
 };
 
