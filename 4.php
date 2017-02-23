@@ -34,23 +34,37 @@ const newCanvas = () => {
   $("#canvasArea").html(canvas);
 };
 
-const update = () => {
+const update = (result) => {
   const canvas = document.querySelector('canvas');
   const ctx = canvas.getContext('2d');
-  for (var i = 0; i < 400; i++) {
-    var x = i / 20;
-    var y = -eval(fn)  * 5 + 100;
+  for (let i = 0; i < 400; i++) {
+    let x = i / 20;
+    let y = Math.sin(x) * result * 5 + 100;
     ctx.lineTo(i/2, y, 1, 1);
   }
+  ctx.strokeStyle = 'rgb(26, 63, 212)';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = 'rgb(0, 0, 0)';
+  ctx.moveTo(100, 0);
+  ctx.lineTo(100,200);
+  ctx.moveTo(0, 100);
+  ctx.lineTo(200,100);
+  ctx.font="30px Arial";
+  ctx.fillStyle = "red";
+  ctx.fillText("X",0, 80);
+  ctx.fillText("Y",120, 200);
   ctx.stroke();
 };
 
 $('#calculator').submit(event => {
   event.preventDefault();
   const value = $('input[name="val1"]').val();
-  fn = `Math.sin(x)*${value}`;
   newCanvas();
-  update();
+  update(value);
 });
 </script>
 

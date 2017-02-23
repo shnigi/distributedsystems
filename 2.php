@@ -17,7 +17,7 @@
 <div class="wrapper">
   <div class="center-div">
     <h1>Clientside part 1</h1>
-    <p>Type your calculation in the format: value1 operation value2. Values and operator separated by space. </p>
+    <p>Type your calculation in the format: value1 operation value2. </p>
     <form id="calculator" action="">
       Operation <input type="text" name="operation">
       <input type="submit">
