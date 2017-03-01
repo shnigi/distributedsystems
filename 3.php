@@ -23,12 +23,12 @@
 <?php
   if( isset($_GET["val1"])) {
     	$value1 = $_GET["val1"];
-    	$multiplier = substr($value1, 0, 12);
-    	$sine = substr($value1, 6, 1);
+    	// $multiplier = substr($value1, 0, 12);
+    	// $sine = substr($value1, 6, 1);
 
     	$content = "set terminal png\n
     				      set output 'test.png'\n
-    				      plot sin(x)*".$multiplier;
+    				      plot sin(x)*".$value1;
 
 
     	file_put_contents("test.plot", $content);
