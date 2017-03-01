@@ -7,8 +7,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-  h1 {
     text-align: center;
   }
   </style>
